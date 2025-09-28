@@ -92,7 +92,7 @@ export class InvoiceFormComponent implements OnInit {
     buyersOrderNo: '', buyersOrderDate: new Date(), dispatchedThrough: '', dispatchDocNo: '', deliveryNoteDate: new Date(),
     destination: '', termsOfDelivery: '', billOfLadingLR_RRNo: '', motorVehicleNo: '',
     items: [
-      {description: '', hsn: '', quantity: 0, rate: 0,per: 'Nos', discountPercentage: 0, cgstRate: 6, sgstRate: 6}
+      {description: '', hsn: '', quantity: 1, rate: 0,per: 'Nos', discountPercentage: 0, cgstRate: 6, sgstRate: 6}
     ],
     panNo: 'FUZPM9480C', totalAmountInWords: ''
   };
