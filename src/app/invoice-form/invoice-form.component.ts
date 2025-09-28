@@ -18,6 +18,8 @@ export interface Party {
   gstin: string;
   state: string;
   stateCode?: string;
+  email?:string;
+  mobileNo?:string;
 }
 
 export interface InvoiceItem {
@@ -83,9 +85,9 @@ export class InvoiceFormComponent implements OnInit {
 
   isSameAsBuyer: boolean = true;
   invoice: Invoice = {
-    seller: { name: 'SOLAR SMART TRADING CO.', address: 'HOUSE NO. 497 GALI NO 1, SHAMBHU NAGAR SHIKOHABAD, FIROZABAD', gstin: '09FUZPM9480C1ZO', state: 'Uttar Pradesh', stateCode: '09' },
-    buyer: { name: '', address: '', gstin: '', state: '', stateCode: '' },
-    consignee: { name: '', address: '', gstin: '', state: '', stateCode: '' },
+    seller: { name: 'SOLAR SMART TRADING CO.', address: 'HOUSE NO. 497 GALI NO 1, SHAMBHU NAGAR SHIKOHABAD, FIROZABAD-283135', email : 'care.solarsmart@gmail.com', mobileNo: '+91-9720375050' , gstin: '09FUZPM9480C1ZO', state: 'Uttar Pradesh', stateCode: '09' },
+    buyer: { name: '', address: '', mobileNo : '+91-', gstin: '', state: '', stateCode: '' },
+    consignee: { name: '', address: '', mobileNo : '+91-', gstin: '', state: '', stateCode: '' },
     invoiceNumber: '',
     invoiceDate: new Date(),
     eWayBillNo: '', deliveryNote: '', termsOfPayment: '', referenceNoAndDate: '',
@@ -205,7 +207,7 @@ export class InvoiceFormComponent implements OnInit {
     };
     inWords += numToWords(integerPart); if (inWords) inWords += R;
     const decimalInWords = numToWords(decimalPart); if (decimalInWords) { inWords += decimalInWords + P; }
-    return ('INR ' + inWords).trim().replace(/\s+/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return ('INR ' + inWords).trim().replace(/\s+/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') + ' Only';
   }
 }
 

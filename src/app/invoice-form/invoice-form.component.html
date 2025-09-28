@@ -30,6 +30,11 @@
                 (ngModelChange)="onBuyerDetailsChange()" rows="3"></textarea>
             </div>
             <div class="field col-12 md:col-6">
+              <label for="buyerMobileNo" class="font-semibold block mb-2">Mobile No.</label>
+              <input id="buyerMobileNo" type="text" pInputText [(ngModel)]="invoice.buyer.mobileNo" class="w-full"
+                (ngModelChange)="onBuyerDetailsChange()">
+            </div>
+            <div class="field col-12 md:col-6">
               <label for="buyerGstin" class="font-semibold block mb-2">GSTIN/UIN</label>
               <input id="buyerGstin" type="text" pInputText [(ngModel)]="invoice.buyer.gstin" class="w-full"
                 (ngModelChange)="onBuyerDetailsChange()">
@@ -37,6 +42,11 @@
             <div class="field col-12 md:col-6">
               <label for="buyerState" class="font-semibold block mb-2">State</label>
               <input id="buyerState" type="text" pInputText [(ngModel)]="invoice.buyer.state" class="w-full"
+                (ngModelChange)="onBuyerDetailsChange()">
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="buyerStateCode" class="font-semibold block mb-2">State Code</label>
+              <input id="buyerStateCode" type="text" pInputText [(ngModel)]="invoice.buyer.stateCode" class="w-full"
                 (ngModelChange)="onBuyerDetailsChange()">
             </div>
           </div>
@@ -65,6 +75,11 @@
                 class="w-full" [disabled]="isSameAsBuyer"></textarea>
             </div>
             <div class="field col-12 md:col-6">
+              <label for="consigneeMobileNo" class="font-semibold block mb-2">Mobile No.</label>
+              <input id="consigneeMobileNo" type="text" pInputText [(ngModel)]="invoice.consignee.mobileNo"
+                class="w-full" [disabled]="isSameAsBuyer">
+            </div>
+            <div class="field col-12 md:col-6">
               <label for="consigneeGstin" class="font-semibold block mb-2">GSTIN/UIN</label>
               <input id="consigneeGstin" type="text" pInputText [(ngModel)]="invoice.consignee.gstin" class="w-full"
                 [disabled]="isSameAsBuyer">
@@ -72,6 +87,11 @@
             <div class="field col-12 md:col-6">
               <label for="consigneeState" class="font-semibold block mb-2">State</label>
               <input id="consigneeState" type="text" pInputText [(ngModel)]="invoice.consignee.state" class="w-full"
+                [disabled]="isSameAsBuyer">
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="consigneeState" class="font-semibold block mb-2">State Code</label>
+              <input id="consigneeState" type="text" pInputText [(ngModel)]="invoice.consignee.stateCode" class="w-full"
                 [disabled]="isSameAsBuyer">
             </div>
           </div>
@@ -114,6 +134,16 @@
           <p-fieldset legend="Dispatch & Delivery Details" class="mt-4">
             <div class="grid formgrid p-fluid">
               <div class="field col-12 md:col-6 lg:col-3">
+                <label for="dispatchDocNo" class="font-semibold block mb-2">Dispatch Doc No.</label>
+                <input id="dispatchDocNo" type="text" pInputText [(ngModel)]="invoice.dispatchDocNo"
+                class="w-full">
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="deliveryNoteDate" class="font-semibold block mb-2">Delivery Note Date</label>
+                <p-calendar id="deliveryNoteDate" [(ngModel)]="invoice.deliveryNoteDate" dateFormat="dd-mm-yy"
+                  styleClass="w-full"></p-calendar>
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
                 <label for="dispatchedThrough" class="font-semibold block mb-2">Dispatched through</label>
                 <input id="dispatchedThrough" type="text" pInputText [(ngModel)]="invoice.dispatchedThrough"
                   class="w-full">
@@ -130,7 +160,7 @@
                 <label for="lrNo" class="font-semibold block mb-2">Bill of Lading/LR-RR No.</label>
                 <input id="lrNo" type="text" pInputText [(ngModel)]="invoice.billOfLadingLR_RRNo" class="w-full">
               </div>
-              <div class="field col-12">
+              <div class="field col-12 md:col-6 lg:col-3">
                 <label for="termsOfDelivery" class="font-semibold block mb-2">Terms of Delivery</label>
                 <input id="termsOfDelivery" type="text" pInputText [(ngModel)]="invoice.termsOfDelivery" class="w-full">
               </div>
@@ -161,14 +191,20 @@
               <tr>
                 <td><input type="text" pInputText [(ngModel)]="item.description" class="w-full"></td>
                 <td><input type="text" pInputText [(ngModel)]="item.hsn" style="width: 80px"></td>
-                <td><input type="number" pInputText [(ngModel)]="item.quantity" (input)="calculateAllTotals()" style="width: 70px"></td>
-                <td><input type="number" pInputText [(ngModel)]="item.rate" (input)="calculateAllTotals()" style="width: 100px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.quantity" (input)="calculateAllTotals()"
+                    style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.rate" (input)="calculateAllTotals()"
+                    style="width: 100px"></td>
                 <td><input type="text" pInputText [(ngModel)]="item.per" style="width: 60px"></td>
-                <td><input type="number" pInputText [(ngModel)]="item.discountPercentage" (input)="calculateAllTotals()" style="width: 70px"></td>
-                <td><input type="number" pInputText [(ngModel)]="item.cgstRate" (input)="calculateAllTotals()" style="width: 70px"></td>
-                <td><input type="number" pInputText [(ngModel)]="item.sgstRate" (input)="calculateAllTotals()" style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.discountPercentage" (input)="calculateAllTotals()"
+                    style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.cgstRate" (input)="calculateAllTotals()"
+                    style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.sgstRate" (input)="calculateAllTotals()"
+                    style="width: 70px"></td>
                 <td class="text-right">{{ item.amount | currency:'INR' }}</td>
-                <td><button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-text" (click)="deleteItem(i)"></button></td>
+                <td><button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-text"
+                    (click)="deleteItem(i)"></button></td>
               </tr>
             </ng-template>
             <ng-template pTemplate="footer">
@@ -196,19 +232,16 @@
       </div>
     </div>
   </div>
-    <div class="sticky-footer flex justify-content-end align-items-center gap-2 p-4 bg-white border-top-1 surface-border shadow-2">
+  <div
+    class="sticky-footer flex justify-content-end align-items-center gap-2 p-4 bg-white border-top-1 surface-border shadow-2">
     <!-- <button pButton 
             type="button" 
             label="Export to Excel" 
             icon="pi pi-file-excel" 
             class="p-button-secondary p-button-outlined">
     </button> -->
-    <button pButton 
-            type="button" 
-            label="Print Invoice" 
-            icon="pi pi-print" 
-            (click)="printInvoice()" 
-            class="p-button-success p-button-lg">
+    <button pButton type="button" label="Print Invoice" icon="pi pi-print" (click)="printInvoice()"
+      class="p-button-success p-button-lg">
     </button>
   </div>
 </div>
@@ -225,6 +258,8 @@
         <td style="width: 50%; vertical-align: top; padding: 5px;">
           <p class="bold">{{ invoice.seller.name }}</p>
           <p>{{ invoice.seller.address }}</p>
+          <p><span class="bold">Mobile No.:</span> {{ invoice.seller.mobileNo }}</p>
+          <p><span class="bold">Email:</span> {{ invoice.seller.email }}</p>
           <p><span class="bold">GSTIN/UIN:</span> {{ invoice.seller.gstin }}</p>
           <p><span class="bold">State Name:</span> {{ invoice.seller.state }}, <span class="bold">Code:</span> {{
             invoice.seller.stateCode }}</p>
@@ -256,6 +291,7 @@
           <p class="bold">Consignee (Ship to)</p>
           <p class="bold">{{ invoice.consignee.name }}</p>
           <p>{{ invoice.consignee.address }}</p>
+          <p><span class="bold">Mobile No.:</span> {{ invoice.consignee.mobileNo }}</p>
           <p><span class="bold">GSTIN/UIN:</span> {{ invoice.consignee.gstin }}</p>
           <p><span class="bold">State Name:</span> {{ invoice.consignee.state }}, <span class="bold">Code:</span> {{
             invoice.consignee.stateCode }}</p>
@@ -265,6 +301,7 @@
           <p class="bold">Buyer (Bill to)</p>
           <p class="bold">{{ invoice.buyer.name }}</p>
           <p>{{ invoice.buyer.address }}</p>
+          <p><span class="bold">Mobile No.:</span> {{ invoice.buyer.mobileNo }}</p>
           <p><span class="bold">GSTIN/UIN:</span> {{ invoice.buyer.gstin }}</p>
           <p><span class="bold">State Name:</span> {{ invoice.buyer.state }}, <span class="bold">Code:</span> {{
             invoice.buyer.stateCode }}</p>
@@ -348,7 +385,7 @@
       </tr>
       <tr>
         <td colspan="2">
-           <table class="bordered-table hsn-summary">
+          <table class="bordered-table hsn-summary">
             <thead>
               <tr>
                 <th rowspan="2">HSN/SAC</th>
