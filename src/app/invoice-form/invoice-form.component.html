@@ -1,0 +1,411 @@
+<div class="screen-only bg-gray-50">
+  <div class="p-4 bg-primary-800 text-white">
+    <div class="flex justify-content-between align-items-center">
+      <div>
+        <div class="text-xl font-bold">{{ invoice.seller.name }}</div>
+        <div class="text-sm opacity-80">{{ invoice.seller.address }}</div>
+      </div>
+      <div class="text-right">
+        <div class="text-sm opacity-80">GSTIN</div>
+        <div class="font-semibold">{{ invoice.seller.gstin }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-4">
+    <div class="grid gap-4">
+
+      <div class="col">
+        <div class="p-4 bg-primary-800 text-white">
+          <h3 class="mt-0 mb-3 font-semibold">Buyer (Bill To)</h3>
+          <div class="grid formgrid p-fluid">
+            <div class="field col-12 md:col-6">
+              <label for="buyerName" class="font-semibold block mb-2">Name</label>
+              <input id="buyerName" type="text" pInputText [(ngModel)]="invoice.buyer.name" class="w-full"
+                (ngModelChange)="onBuyerDetailsChange()">
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="buyerAddress" class="font-semibold block mb-2">Address</label>
+              <textarea id="buyerAddress" pInputTextarea [(ngModel)]="invoice.buyer.address" class="w-full"
+                (ngModelChange)="onBuyerDetailsChange()" rows="3"></textarea>
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="buyerGstin" class="font-semibold block mb-2">GSTIN/UIN</label>
+              <input id="buyerGstin" type="text" pInputText [(ngModel)]="invoice.buyer.gstin" class="w-full"
+                (ngModelChange)="onBuyerDetailsChange()">
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="buyerState" class="font-semibold block mb-2">State</label>
+              <input id="buyerState" type="text" pInputText [(ngModel)]="invoice.buyer.state" class="w-full"
+                (ngModelChange)="onBuyerDetailsChange()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="p-4 bg-gray-800 text-white">
+          <div class="flex justify-content-between align-items-center">
+            <h3 class="mt-0 mb-3 font-bold ">Consignee (Ship To)</h3>
+            <div class="field-checkbox">
+              <p-checkbox [(ngModel)]="isSameAsBuyer" (onChange)="onSameAsBuyerChange()" [binary]="true"
+                inputId="sameAsBuyer"></p-checkbox>
+              <label for="sameAsBuyer" class="ml-2">Same as Buyer</label>
+            </div>
+          </div>
+          <div class="grid formgrid p-fluid">
+            <div class="field col-12 md:col-6">
+              <label for="consigneeName" class="font-semibold block mb-2">Name</label>
+              <input id="consigneeName" type="text" pInputText [(ngModel)]="invoice.consignee.name" class="w-full"
+                [disabled]="isSameAsBuyer">
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="consigneeAddress" class="font-semibold block mb-2">Address</label>
+              <textarea id="consigneeAddress" pInputTextarea [(ngModel)]="invoice.consignee.address" rows="3"
+                class="w-full" [disabled]="isSameAsBuyer"></textarea>
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="consigneeGstin" class="font-semibold block mb-2">GSTIN/UIN</label>
+              <input id="consigneeGstin" type="text" pInputText [(ngModel)]="invoice.consignee.gstin" class="w-full"
+                [disabled]="isSameAsBuyer">
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="consigneeState" class="font-semibold block mb-2">State</label>
+              <input id="consigneeState" type="text" pInputText [(ngModel)]="invoice.consignee.state" class="w-full"
+                [disabled]="isSameAsBuyer">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-4 bg-white border-round shadow-2">
+          <p-fieldset legend="Invoice & Order Details" class="mt-4">
+            <div class="grid formgrid p-fluid">
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="invoiceNo" class="font-semibold block mb-2">Invoice No.</label>
+                <input id="invoiceNo" type="text" pInputText [(ngModel)]="invoice.invoiceNumber" class="w-full">
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="invoiceDate" class="font-semibold block mb-2">Invoice Date</label>
+                <p-calendar id="invoiceDate" [(ngModel)]="invoice.invoiceDate" dateFormat="dd-mm-yy"
+                  styleClass="w-full"></p-calendar>
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="buyersOrderNo" class="font-semibold block mb-2">Buyer's Order No.</label>
+                <input id="buyersOrderNo" type="text" pInputText [(ngModel)]="invoice.buyersOrderNo" class="w-full">
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="buyersOrderDate" class="font-semibold block mb-2">Buyer's Order Date</label>
+                <p-calendar id="buyersOrderDate" [(ngModel)]="invoice.buyersOrderDate" dateFormat="dd-mm-yy"
+                  styleClass="w-full"></p-calendar>
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="eWayBillNo" class="font-semibold block mb-2">e-Way Bill No.</label>
+                <input id="eWayBillNo" type="text" pInputText [(ngModel)]="invoice.eWayBillNo" class="w-full">
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="refNo" class="font-semibold block mb-2">Reference No. & Date</label>
+                <input id="refNo" type="text" pInputText [(ngModel)]="invoice.referenceNoAndDate" class="w-full">
+              </div>
+            </div>
+          </p-fieldset>
+
+          <p-fieldset legend="Dispatch & Delivery Details" class="mt-4">
+            <div class="grid formgrid p-fluid">
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="dispatchedThrough" class="font-semibold block mb-2">Dispatched through</label>
+                <input id="dispatchedThrough" type="text" pInputText [(ngModel)]="invoice.dispatchedThrough"
+                  class="w-full">
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="destination" class="font-semibold block mb-2">Destination</label>
+                <input id="destination" type="text" pInputText [(ngModel)]="invoice.destination" class="w-full">
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="motorVehicle" class="font-semibold block mb-2">Motor Vehicle No.</label>
+                <input id="motorVehicle" type="text" pInputText [(ngModel)]="invoice.motorVehicleNo" class="w-full">
+              </div>
+              <div class="field col-12 md:col-6 lg:col-3">
+                <label for="lrNo" class="font-semibold block mb-2">Bill of Lading/LR-RR No.</label>
+                <input id="lrNo" type="text" pInputText [(ngModel)]="invoice.billOfLadingLR_RRNo" class="w-full">
+              </div>
+              <div class="field col-12">
+                <label for="termsOfDelivery" class="font-semibold block mb-2">Terms of Delivery</label>
+                <input id="termsOfDelivery" type="text" pInputText [(ngModel)]="invoice.termsOfDelivery" class="w-full">
+              </div>
+            </div>
+          </p-fieldset>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-4 bg-white border-round shadow-2">
+          <h3 class="mt-0 mb-4 font-bold text-gray-700">Invoice Items</h3>
+          <p-table [value]="invoice.items" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Description</th>
+                <th>HSN/SAC</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Per</th>
+                <th>Disc.%</th>
+                <th>CGST %</th>
+                <th>SGST %</th>
+                <th>Amount</th>
+                <th style="width: 5rem">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+              <tr>
+                <td><input type="text" pInputText [(ngModel)]="item.description" class="w-full"></td>
+                <td><input type="text" pInputText [(ngModel)]="item.hsn" style="width: 80px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.quantity" (input)="calculateAllTotals()" style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.rate" (input)="calculateAllTotals()" style="width: 100px"></td>
+                <td><input type="text" pInputText [(ngModel)]="item.per" style="width: 60px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.discountPercentage" (input)="calculateAllTotals()" style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.cgstRate" (input)="calculateAllTotals()" style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.sgstRate" (input)="calculateAllTotals()" style="width: 70px"></td>
+                <td class="text-right">{{ item.amount | currency:'INR' }}</td>
+                <td><button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-text" (click)="deleteItem(i)"></button></td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+              <tr>
+                <td colspan="8" class="text-right">Sub-Total</td>
+                <td class="text-right font-bold">{{ invoice.subTotal | currency:'INR' }}</td>
+              </tr>
+              <tr>
+                <td colspan="8" class="text-right">Total CGST</td>
+                <td class="text-right font-bold">{{ invoice.cgstAmount | currency:'INR' }}</td>
+              </tr>
+              <tr>
+                <td colspan="8" class="text-right">Total SGST</td>
+                <td class="text-right font-bold">{{ invoice.sgstAmount | currency:'INR' }}</td>
+              </tr>
+              <tr>
+                <td colspan="8" class="text-right font-bold text-lg">Total</td>
+                <td class="text-right font-bold text-lg">{{ invoice.totalAmount | currency:'INR' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <button pButton type="button" label="Add Item" icon="pi pi-plus" (click)="addNewItem()"
+            class="p-button-sm p-button-secondary mt-3"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="sticky-footer flex justify-content-end align-items-center gap-2 p-4 bg-white border-top-1 surface-border shadow-2">
+    <!-- <button pButton 
+            type="button" 
+            label="Export to Excel" 
+            icon="pi pi-file-excel" 
+            class="p-button-secondary p-button-outlined">
+    </button> -->
+    <button pButton 
+            type="button" 
+            label="Print Invoice" 
+            icon="pi pi-print" 
+            (click)="printInvoice()" 
+            class="p-button-success p-button-lg">
+    </button>
+  </div>
+</div>
+
+<div id="printable-invoice" class="print-only">
+  <table class="invoice-table">
+    <thead>
+      <tr>
+        <th colspan="2" class="invoice-title">Tax Invoice</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="width: 50%; vertical-align: top; padding: 5px;">
+          <p class="bold">{{ invoice.seller.name }}</p>
+          <p>{{ invoice.seller.address }}</p>
+          <p><span class="bold">GSTIN/UIN:</span> {{ invoice.seller.gstin }}</p>
+          <p><span class="bold">State Name:</span> {{ invoice.seller.state }}, <span class="bold">Code:</span> {{
+            invoice.seller.stateCode }}</p>
+        </td>
+        <td style="width: 50%;">
+          <table class="bordered-table">
+            <tr>
+              <td><span class="bold">Invoice No.</span><br>{{ invoice.invoiceNumber }}</td>
+              <td><span class="bold">e-Way Bill No.</span><br>{{ invoice.eWayBillNo }}</td>
+            </tr>
+            <tr>
+              <td><span class="bold">Dated</span><br>{{ invoice.invoiceDate | date:'dd-MMM-yyyy' }}</td>
+              <td><span class="bold">Delivery Note</span><br>{{ invoice.deliveryNote }}</td>
+            </tr>
+            <tr>
+              <td colspan="2"><span class="bold">Mode/Terms of Payment</span><br>{{ invoice.termsOfPayment }}</td>
+            </tr>
+            <tr>
+              <td colspan="2"><span class="bold">Reference No. & Date</span><br>{{ invoice.referenceNoAndDate }}</td>
+            </tr>
+            <tr>
+              <td colspan="2"><span class="bold">Other References</span><br>&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top; padding: 5px; border-top: 1px solid black;">
+          <p class="bold">Consignee (Ship to)</p>
+          <p class="bold">{{ invoice.consignee.name }}</p>
+          <p>{{ invoice.consignee.address }}</p>
+          <p><span class="bold">GSTIN/UIN:</span> {{ invoice.consignee.gstin }}</p>
+          <p><span class="bold">State Name:</span> {{ invoice.consignee.state }}, <span class="bold">Code:</span> {{
+            invoice.consignee.stateCode }}</p>
+
+          <hr style="border: none; border-top: 1px solid black; margin: 5px 0;">
+
+          <p class="bold">Buyer (Bill to)</p>
+          <p class="bold">{{ invoice.buyer.name }}</p>
+          <p>{{ invoice.buyer.address }}</p>
+          <p><span class="bold">GSTIN/UIN:</span> {{ invoice.buyer.gstin }}</p>
+          <p><span class="bold">State Name:</span> {{ invoice.buyer.state }}, <span class="bold">Code:</span> {{
+            invoice.buyer.stateCode }}</p>
+        </td>
+        <td style="vertical-align: top; border-top: 1px solid black;">
+          <table class="bordered-table">
+            <tr>
+              <td><span class="bold">Buyer's Order No.</span><br>{{ invoice.buyersOrderNo }}</td>
+              <td><span class="bold">Dated</span><br>{{ invoice.buyersOrderDate | date:'dd-MMM-yyyy' }}</td>
+            </tr>
+            <tr>
+              <td><span class="bold">Dispatch Doc No.</span><br>{{ invoice.dispatchDocNo }}</td>
+              <td><span class="bold">Delivery Note Date</span><br>{{ invoice.deliveryNoteDate | date:'dd-MMM-yyyy' }}
+              </td>
+            </tr>
+            <tr>
+              <td><span class="bold">Dispatched through</span><br>{{ invoice.dispatchedThrough }}</td>
+              <td><span class="bold">Destination</span><br>{{ invoice.destination }}</td>
+            </tr>
+            <tr>
+              <td><span class="bold">Bill of Lading/LR-RR No.</span><br>{{ invoice.billOfLadingLR_RRNo }}</td>
+              <td><span class="bold">Motor Vehicle No.</span><br>{{ invoice.motorVehicleNo }}</td>
+            </tr>
+            <tr>
+              <td colspan="2" style="height: 50px; vertical-align: top;"><span class="bold">Terms of
+                  Delivery</span><br>{{ invoice.termsOfDelivery }}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table class="bordered-table items-table">
+            <thead>
+              <tr>
+                <th>Sl No.</th>
+                <th>Description of Goods</th>
+                <th>HSN/SAC</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>per</th>
+                <th>Disc. %</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of invoice.items; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.hsn }}</td>
+                <td class="text-right">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.rate | number:'1.2-2' }}</td>
+                <td>{{ item.per }}</td>
+                <td class="text-right">{{ item.discountPercentage | number:'1.2-2' }}</td>
+                <td class="text-right bold">{{ item.amount | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="7" class="text-right bold">Sub Total</td>
+                <td class="text-right">{{ invoice.subTotal | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td colspan="7" class="text-right bold">CGST</td>
+                <td class="text-right">{{ invoice.cgstAmount | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td colspan="7" class="text-right bold">SGST</td>
+                <td class="text-right">{{ invoice.sgstAmount | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td colspan="7" class="text-right bold total-row">Total</td>
+                <td class="text-right bold total-row">{{ invoice.totalAmount | number:'1.2-2' }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="eoe-row text-center"><span style="font-style: italic;">E. & O.E.</span></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+           <table class="bordered-table hsn-summary">
+            <thead>
+              <tr>
+                <th rowspan="2">HSN/SAC</th>
+                <th rowspan="2">Taxable Value</th>
+                <th colspan="2">CGST</th>
+                <th colspan="2">SGST/UTGST</th>
+                <th rowspan="2">Total Tax Amount</th>
+              </tr>
+              <tr>
+                <th>Rate</th>
+                <th>Amount</th>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let summary of hsnSummary">
+                <td>{{ summary.hsn }}</td>
+                <td class="text-right">{{ summary.taxableValue | number:'1.2-2' }}</td>
+                <td class="text-right">{{ summary.cgstRate }}%</td>
+                <td class="text-right">{{ summary.cgstAmount | number:'1.2-2' }}</td>
+                <td class="text-right">{{ summary.sgstRate }}%</td>
+                <td class="text-right">{{ summary.sgstAmount | number:'1.2-2' }}</td>
+                <td class="text-right">{{ summary.totalTaxAmount | number:'1.2-2' }}</td>
+              </tr>
+              <tr class="bold">
+                <td>Total</td>
+                <td class="text-right">{{ invoice.subTotal | number:'1.2-2' }}</td>
+                <td></td>
+                <td class="text-right">{{ invoice.cgstAmount | number:'1.2-2' }}</td>
+                <td></td>
+                <td class="text-right">{{ invoice.sgstAmount | number:'1.2-2' }}</td>
+                <td class="text-right">{{ (invoice.cgstAmount || 0) + (invoice.sgstAmount || 0) | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding: 5px;">
+          <p><span class="bold">Total Amount (in words):</span> {{ invoice.totalAmountInWords }}</p>
+          <p><span class="bold">PAN NO.:</span> {{ invoice.panNo }}</p>
+          <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+              <p class="bold">Declaration</p>
+              <p style="font-size: 10px;">We declare that this invoice shows the actual price of the goods described and
+                that all particulars are true and correct.</p>
+            </div>
+            <div style="text-align: center;">
+              <p class="bold">for {{ invoice.seller.name }}</p><br><br><br>
+              <p>Authorised Signatory</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="text-center" style="font-size: 10px; font-style: italic;">SUBJECT TO FIROZABAD JURISDICTION<br>This is a
+    Computer Generated Invoice</p>
+</div>
