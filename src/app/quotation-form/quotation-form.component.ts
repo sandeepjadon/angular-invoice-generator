@@ -67,12 +67,12 @@ export class QuotationFormComponent implements OnInit {
     seller: {
       name: 'Solar Smart Trading CO.',
       address: 'HNo.497, Gali No.1,Shambhu Nagar,Shikohabad,Firozabad,UP, 283135',
-      phoneNo: '97203 75050, 97203 75051',
+      phoneNo: '97203 75050, 97206 15050 ',
       email: 'care.solarsmart@gmail.com',
       gstin: '09FUZPM9480C1ZO'
     },
     buyer: { name: '', address: '', phoneNo: '', email: '', gstin: '' },
-    quoteNo: 'SS/0022',
+    quoteNo: '',
     date: new Date(),
     paymentDueDate: undefined,
     validFor: undefined,
