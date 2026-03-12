@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { InvoiceFormComponent } from './invoice-form/invoice-form.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    InvoiceFormComponent
+    RouterOutlet
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

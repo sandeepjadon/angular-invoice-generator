@@ -1,0 +1,170 @@
+/* ==========================================================================
+   Screen Styles 
+   ========================================================================== */
+.screen-only {
+  display: block;
+}
+
+.print-only {
+  display: none;
+}
+
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+}
+/* ==========================================================================
+   Print Styles (Professional Corporate Layout)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
+  .screen-only {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+    width: 100%;
+    color: #1e293b; /* Softer black (slate-800) for better readability */
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+  }
+
+  /* Typography & Utilities */
+  h1, h2, h3, h4, p { margin: 0; padding: 2px 0; }
+  .text-center { text-align: center; }
+  .text-right { text-align: right; }
+  .font-bold, strong { font-weight: bold; }
+  .w-full { width: 100%; }
+  .m-0 { margin: 0; }
+  .p-1 { padding: 4px; }
+  .p-2 { padding: 8px; }
+  .px-2 { padding-left: 8px; padding-right: 8px; }
+  .float-right { float: right; }
+  .mr-3 { margin-right: 15px; }
+  .mt-1 { margin-top: 5px; }
+  
+  /* --- Professional Color Palette --- */
+  .text-primary { color: #1e3a8a !important; } /* Deep corporate blue */
+  
+  .quote-banner {
+    background-color: #7293ee !important; /* Deep blue background */
+    color: #ffffff !important; /* White text */
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    padding: 10px 0;
+    text-transform: uppercase;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .header-professional {
+    background-color: #f1f5f9 !important; /* Clean, light slate gray */
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .row-highlight {
+    background-color: #f8fafc !important; /* Extremely subtle gray for totals */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .footer-note {
+    background-color: #f1f5f9 !important;
+    font-weight: bold;
+    color: #475569 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* --- Layout & Spacing --- */
+  .print-container {
+    border: 1px solid #000;
+  }
+  
+  .seller-details-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+  }
+
+  .company-title {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+
+  .print-logo {
+    height: 100px; /* Large, prominent logo */
+    max-width: 250px;
+    object-fit: contain;
+  }
+
+  /* Spacer Row */
+  .spacer-row td {
+    height: 35px; /* This creates the visual gap you asked for */
+    border: none !important; /* Ensures no lines run through the empty space */
+  }
+
+  /* Core Tables Framework */
+  .main-print-table, .inner-meta-table, .items-print-table, .footer-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .main-print-table {
+    border-top: 1px solid #000;
+  }
+
+  .main-print-table > tbody > tr > td {
+    border-bottom: 1px solid #000;
+  }
+
+  /* Structural Borders */
+  .border-right { border-right: 1px solid #000; }
+  .border-left { border-left: 1px solid #000; }
+  .border-top { border-top: 1px solid #000; }
+  .border-bottom { border-bottom: 1px solid #000; }
+  .border-top-thin { border-top: 1px solid #ccc; padding-top: 4px; margin-top: 4px;}
+  .no-padding { padding: 0 !important; }
+  .no-bottom-border { border-bottom: none !important; }
+
+  /* Inner Meta Table */
+  .inner-meta-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #000;
+  }
+
+  /* Items List Table */
+  .items-print-table th, 
+  .items-print-table td {
+    border: 1px solid #000;
+    padding: 6px 4px;
+  }
+  
+  .items-print-table th {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .items-print-table tfoot td {
+    border: 1px solid #000;
+    border-top: 2px solid #000;
+  }
+
+  .company-stamp-text {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px; 
+    margin-top: 10px;
+  }
+}

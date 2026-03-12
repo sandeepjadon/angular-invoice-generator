@@ -10,6 +10,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { Router } from '@angular/router';
 
 // --- Data Models ---
 export interface Party {
@@ -18,8 +19,8 @@ export interface Party {
   gstin: string;
   state: string;
   stateCode?: string;
-  email?:string;
-  mobileNo?:string;
+  email?: string;
+  mobileNo?: string;
 }
 
 export interface InvoiceItem {
@@ -77,7 +78,7 @@ export interface HsnSummaryItem {
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
-  imports: [ CommonModule, FormsModule, CardModule, FieldsetModule, InputTextModule, CalendarModule, TableModule, ButtonModule, CheckboxModule, CurrencyPipe, DatePipe ],
+  imports: [CommonModule, FormsModule, CardModule, FieldsetModule, InputTextModule, CalendarModule, TableModule, ButtonModule, CheckboxModule, CurrencyPipe, DatePipe],
   templateUrl: './invoice-form.component.html',
   styleUrls: ['./invoice-form.component.scss']
 })
@@ -85,23 +86,23 @@ export class InvoiceFormComponent implements OnInit {
 
   isSameAsBuyer: boolean = true;
   invoice: Invoice = {
-    seller: { name: 'SOLAR SMART TRADING CO.', address: 'HOUSE NO. 497 GALI NO 1, SHAMBHU NAGAR SHIKOHABAD, FIROZABAD-283135', email : 'care.solarsmart@gmail.com', mobileNo: '+91-9720375050' , gstin: '09FUZPM9480C1ZO', state: 'Uttar Pradesh', stateCode: '09' },
-    buyer: { name: '', address: '', mobileNo : '+91-', gstin: '', state: '', stateCode: '' },
-    consignee: { name: '', address: '', mobileNo : '+91-', gstin: '', state: '', stateCode: '' },
+    seller: { name: 'SOLAR SMART TRADING CO.', address: 'HOUSE NO. 497 GALI NO 1, SHAMBHU NAGAR SHIKOHABAD, FIROZABAD-283135', email: 'care.solarsmart@gmail.com', mobileNo: '+91-9720375050', gstin: '09FUZPM9480C1ZO', state: 'Uttar Pradesh', stateCode: '09' },
+    buyer: { name: '', address: '', mobileNo: '+91-', gstin: '', state: '', stateCode: '' },
+    consignee: { name: '', address: '', mobileNo: '+91-', gstin: '', state: '', stateCode: '' },
     invoiceNumber: '',
     invoiceDate: new Date(),
     eWayBillNo: '', deliveryNote: '', termsOfPayment: '', referenceNoAndDate: '',
     buyersOrderNo: '', buyersOrderDate: new Date(), dispatchedThrough: '', dispatchDocNo: '', deliveryNoteDate: new Date(),
     destination: '', termsOfDelivery: '', billOfLadingLR_RRNo: '', motorVehicleNo: '',
     items: [
-      {description: '', hsn: '', quantity: 1, rate: 0,per: 'Nos', discountPercentage: 0, cgstRate: 6, sgstRate: 6}
+      { description: '', hsn: '', quantity: 1, rate: 0, per: 'Nos', discountPercentage: 0, cgstRate: 6, sgstRate: 6 }
     ],
     panNo: 'FUZPM9480C', totalAmountInWords: ''
   };
 
   hsnSummary: HsnSummaryItem[] = [];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void { this.calculateAllTotals(); }
 
@@ -111,13 +112,13 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   onBuyerDetailsChange(): void {
-    if(this.isSameAsBuyer) { this.invoice.consignee = { ...this.invoice.buyer }; }
+    if (this.isSameAsBuyer) { this.invoice.consignee = { ...this.invoice.buyer }; }
   }
-  
+
   addNewItem(): void {
     this.invoice.items.push({
       description: '', hsn: '', quantity: 1, rate: 0, per: 'Nos',
-      discountPercentage: 0, cgstRate: 6 , sgstRate: 6, amount: 0
+      discountPercentage: 0, cgstRate: 6, sgstRate: 6, amount: 0
     });
   }
 
@@ -138,11 +139,11 @@ export class InvoiceFormComponent implements OnInit {
     });
 
     this.invoice.subTotal = this.invoice.items.reduce((acc, item) => acc + (item.amount || 0), 0);
-    
+
     // Calculate total taxes by summing up from each item
     this.invoice.items.forEach(item => {
-        totalCgst += (item.amount || 0) * (item.cgstRate / 100);
-        totalSgst += (item.amount || 0) * (item.sgstRate / 100);
+      totalCgst += (item.amount || 0) * (item.cgstRate / 100);
+      totalSgst += (item.amount || 0) * (item.sgstRate / 100);
     });
     this.invoice.cgstAmount = totalCgst;
     this.invoice.sgstAmount = totalSgst;
@@ -157,7 +158,7 @@ export class InvoiceFormComponent implements OnInit {
       if (!item.hsn) continue;
       // Group by HSN and Tax Rates
       const key = `${item.hsn}_${item.cgstRate}_${item.sgstRate}`;
-      
+
       if (hsnMap[key]) {
         hsnMap[key].taxableValue += item.amount || 0;
       } else {
@@ -187,7 +188,7 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   printInvoice(): void { window.print(); }
-  
+
   private convertToIndianWords(num: number): string {
     const a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
     const b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
@@ -195,19 +196,23 @@ export class InvoiceFormComponent implements OnInit {
     const [integerPart, decimalPart] = num.toFixed(2).split('.');
     let inWords = '';
     const numToWords = (n: string): string => {
-        let str = ''; if (n.length > 9) return str;
-        let n_array = ('000000000' + n).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-        if (!n_array) return '';
-        str += (Number(n_array[1]) !== 0) ? (a[Number(n_array[1])] || b[Number(n_array[1][0])] + ' ' + a[Number(n_array[1][1])]) + 'crore ' : '';
-        str += (Number(n_array[2]) !== 0) ? (a[Number(n_array[2])] || b[Number(n_array[2][0])] + ' ' + a[Number(n_array[2][1])]) + 'lakh ' : '';
-        str += (Number(n_array[3]) !== 0) ? (a[Number(n_array[3])] || b[Number(n_array[3][0])] + ' ' + a[Number(n_array[3][1])]) + 'thousand ' : '';
-        str += (Number(n_array[4]) !== 0) ? (a[Number(n_array[4])] || b[Number(n_array[4][0])] + ' ' + a[Number(n_array[4][1])]) + 'hundred ' : '';
-        str += (Number(n_array[5]) !== 0) ? ((str !== '') ? 'and ' : '') + (a[Number(n_array[5])] || b[Number(n_array[5][0])] + ' ' + a[Number(n_array[5][1])]) : '';
-        return str;
+      let str = ''; if (n.length > 9) return str;
+      let n_array = ('000000000' + n).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+      if (!n_array) return '';
+      str += (Number(n_array[1]) !== 0) ? (a[Number(n_array[1])] || b[Number(n_array[1][0])] + ' ' + a[Number(n_array[1][1])]) + 'crore ' : '';
+      str += (Number(n_array[2]) !== 0) ? (a[Number(n_array[2])] || b[Number(n_array[2][0])] + ' ' + a[Number(n_array[2][1])]) + 'lakh ' : '';
+      str += (Number(n_array[3]) !== 0) ? (a[Number(n_array[3])] || b[Number(n_array[3][0])] + ' ' + a[Number(n_array[3][1])]) + 'thousand ' : '';
+      str += (Number(n_array[4]) !== 0) ? (a[Number(n_array[4])] || b[Number(n_array[4][0])] + ' ' + a[Number(n_array[4][1])]) + 'hundred ' : '';
+      str += (Number(n_array[5]) !== 0) ? ((str !== '') ? 'and ' : '') + (a[Number(n_array[5])] || b[Number(n_array[5][0])] + ' ' + a[Number(n_array[5][1])]) : '';
+      return str;
     };
     inWords += numToWords(integerPart); if (inWords) inWords += R;
     const decimalInWords = numToWords(decimalPart); if (decimalInWords) { inWords += decimalInWords + P; }
     return ('INR ' + inWords).trim().replace(/\s+/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') + ' Only';
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 }
 

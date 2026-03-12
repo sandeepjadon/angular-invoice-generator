@@ -2,11 +2,7 @@ import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angul
 import { provideRouter } from '@angular/router';
 // import { provideTablerIcons } from 'angular-tabler-icons';
 // import * as TablerIcons from 'angular-tabler-icons/icons';
-// import { routes } from './app.routes';
-import {
-  provideClientHydration,
-  withEventReplay,
-} from '@angular/platform-browser';
+import { routes } from '../app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import ApPreset from '../appreset';
@@ -20,9 +16,8 @@ registerLocaleData(localeIn);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    // provideRouter(routes),
+    provideRouter(routes),
     // provideTablerIcons(TablerIcons),
-    provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
 
     providePrimeNG({

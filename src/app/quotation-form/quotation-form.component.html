@@ -1,0 +1,308 @@
+<div class="screen-only bg-gray-50">
+    <div class="p-4 bg-primary-800 text-white">
+        <div class="flex justify-content-between align-items-center">
+            <div class="flex align-items-center">
+                <img src="assets/imgs/logo.jpg" alt="Company Logo" class="block h-3rem mr-4 border-circle">
+                <div>
+                    <div class="text-xl font-bold">QUOTATION GENERATOR</div>
+                    <div class="text-sm opacity-80">{{ quotation.seller.name }}</div>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm opacity-80">GSTIN</div>
+                <div class="font-semibold">{{ quotation.seller.gstin }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4">
+        <div class="grid gap-4">
+            <div class="col-12 md:col-6 lg:col-12">
+                <div class="p-4 bg-white shadow-2 border-round h-full">
+                    <h3 class="mt-0 mb-3 font-semibold text-gray-700">Bill To (Buyer Details)</h3>
+                    <div class="grid formgrid p-fluid">
+                        <div class="field col-12">
+                            <label class="font-semibold block mb-2">Name</label>
+                            <input type="text" pInputText [(ngModel)]="quotation.buyer.name">
+                        </div>
+                        <div class="field col-12">
+                            <label class="font-semibold block mb-2">Address</label>
+                            <textarea pInputTextarea [(ngModel)]="quotation.buyer.address" rows="3"></textarea>
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label class="font-semibold block mb-2">Phone No.</label>
+                            <input type="text" pInputText [(ngModel)]="quotation.buyer.phoneNo">
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label class="font-semibold block mb-2">GSTIN</label>
+                            <input type="text" pInputText [(ngModel)]="quotation.buyer.gstin">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-12 lg:col-12">
+                <div class="p-4 bg-white shadow-2 border-round h-full">
+                    <h3 class="mt-0 mb-3 font-semibold text-gray-700">Quotation Meta Data</h3>
+                    <div class="grid formgrid p-fluid">
+                        <div class="field col-12 md:col-6">
+                            <label class="font-semibold block mb-2">Quote No.</label>
+                            <input type="text" pInputText [(ngModel)]="quotation.quoteNo">
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label class="font-semibold block mb-2">Date</label>
+                            <p-datepicker [(ngModel)]="quotation.date" dateFormat="dd-mm-yy"
+                                [showIcon]="true"></p-datepicker>
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label class="font-semibold block mb-2">Payment Due Date</label>
+                            <p-datepicker [(ngModel)]="quotation.paymentDueDate" dateFormat="dd-mm-yy"
+                                [showIcon]="true"></p-datepicker>
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label class="font-semibold block mb-2">Valid For</label>
+                            <p-datepicker [(ngModel)]="quotation.validFor" dateFormat="dd-mm-yy"
+                                [showIcon]="true"></p-datepicker>
+                        </div>
+                        <div class="field col-12">
+                            <label class="font-semibold block mb-2">Quote Prepared By</label>
+                            <input type="text" pInputText [(ngModel)]="quotation.preparedBy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="p-4 bg-white shadow-2 border-round">
+                    <h3 class="mt-0 mb-4 font-bold text-gray-700">Quotation Items</h3>
+                    <p-table [value]="quotation.items" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem">Sl.</th>
+                                <th>Description</th>
+                                <th style="width: 10rem">Rating</th>
+                                <th style="width: 7rem">Qty</th>
+                                <th style="width: 10rem">Price/Unit</th>
+                                <th style="width: 7rem">GST (%)</th>
+                                <th style="width: 10rem">Amount</th>
+                                <th style="width: 5rem"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td><input type="text" pInputText [(ngModel)]="item.description" class="w-full"></td>
+                                <td><input type="text" pInputText [(ngModel)]="item.rating" class="w-full"></td>
+                                <td><input type="number" pInputText [(ngModel)]="item.quantity"
+                                        (input)="calculateTotals()" class="w-full"></td>
+                                <td><input type="number" pInputText [(ngModel)]="item.pricePerUnit"
+                                        (input)="calculateTotals()" class="w-full"></td>
+                                <td><input type="number" pInputText [(ngModel)]="item.gstPercentage"
+                                        (input)="calculateTotals()" class="w-full"></td>
+                                <td class="text-right font-semibold">{{ item.amount | currency:'INR':'symbol':'1.0-0' }}
+                                </td>
+                                <td>
+                                    <button pButton icon="pi pi-trash"
+                                        class="p-button-danger p-button-text p-button-rounded"
+                                        (click)="deleteItem(i)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="footer">
+                            <tr>
+                                <td colspan="6" class="text-right font-bold">Sub Total</td>
+                                <td class="text-right font-bold text-blue-600">{{ quotation.subTotal |
+                                    currency:'INR':'symbol':'1.0-0' }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right font-bold">Advance Payment</td>
+                                <td class="text-right">
+                                    <input type="number" pInputText [(ngModel)]="quotation.advance"
+                                        (input)="calculateTotals()" class="w-full text-right">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right font-bold text-lg">Final Amount</td>
+                                <td class="text-right font-bold text-lg text-green-600">{{ quotation.finalAmount |
+                                    currency:'INR':'symbol':'1.0-0' }}</td>
+                                <td></td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <button pButton label="Add Item" icon="pi pi-plus" (click)="addNewItem()"
+                        class="p-button-outlined mt-3"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="sticky-footer flex justify-content-between align-items-center p-4 bg-white border-top-1 surface-border shadow-2 w-full">
+
+        <div>
+            <button pButton label="Back to Home" icon="pi pi-arrow-left" (click)="goBack()"
+                class="p-button-outlined p-button-lg">
+            </button>
+        </div>
+
+        <div>
+            <button pButton label="Print Quotation" icon="pi pi-print" (click)="printQuotation()"
+                class="p-button-success p-button-lg">
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="printable-quotation" class="print-only">
+    <div class="print-container">
+
+        <div class="quote-banner">QUOTATION</div>
+
+        <div class="seller-details-wrapper flex-row">
+            <div class="seller-info">
+                <h1 class="company-title text-primary">{{ quotation.seller.name }}</h1>
+                <p><strong>Add.:</strong> {{ quotation.seller.address }}</p>
+
+                <div class="mt-1 text-sm" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                    <span style="white-space: nowrap;"><strong>Phone No.:</strong> {{ quotation.seller.phoneNo }}</span>
+                    <span style="white-space: nowrap;"><strong>Email ID:</strong> {{ quotation.seller.email }}</span>
+                    <span style="white-space: nowrap;"><strong>GSTIN:</strong> {{ quotation.seller.gstin }}</span>
+                </div>
+            </div>
+            <div class="logo-wrapper">
+                <img src="assets/imgs/logo.jpg" alt="Logo" class="print-logo">
+            </div>
+        </div>
+
+        <table class="main-print-table">
+            <tr>
+                <td style="width: 50%; vertical-align: top;" class="p-2 border-right">
+                    <h4 class="m-0 mb-1">Bill To:</h4>
+                    <p><strong>Name:</strong> {{ quotation.buyer.name }}</p>
+                    <p><strong>Address:</strong> {{ quotation.buyer.address }}</p>
+                    <br>
+                    <p><strong>Phone No.:</strong> {{ quotation.buyer.phoneNo }}</p>
+                    <p><strong>Email ID:</strong> {{ quotation.buyer.email }}</p>
+                    <p><strong>GSTIN:</strong> {{ quotation.buyer.gstin }}</p>
+                </td>
+                <td style="width: 50%; vertical-align: top;" class="no-padding">
+                    <table class="inner-meta-table w-full">
+                        <tr>
+                            <td><strong>Quote No.:</strong> {{ quotation.quoteNo }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date:</strong> {{ quotation.date | date:'dd-MM-yyyy' }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payment Due Date:</strong> {{ quotation.paymentDueDate ?
+                                (quotation.paymentDueDate | date:'dd-MM-yyyy') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="no-bottom-border"><strong>Valid for:</strong> {{ quotation.validFor ?
+                                (quotation.validFor | date:'dd-MM-yyyy') : '' }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="p-2 border-top">
+                    <strong>Quote Prepared by:</strong> {{ quotation.preparedBy }}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="no-padding border-top">
+                    <table class="items-print-table w-full">
+                        <thead>
+                            <tr class="header-professional">
+                                <th style="width: 5%;">Sl. No.</th>
+                                <th style="width: 35%;">Description</th>
+                                <th style="width: 10%;">Rating</th>
+                                <th style="width: 10%;">Quantity</th>
+                                <th style="width: 15%;">Price /Unit</th>
+                                <th style="width: 10%;">GST (%)</th>
+                                <th style="width: 15%;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of quotation.items; let i = index">
+                                <td class="text-center font-bold">{{ i + 1 }}</td>
+                                <td>{{ item.description }}</td>
+                                <td class="text-center">{{ item.rating }}</td>
+                                <td class="text-center">{{ item.quantity }}</td>
+                                <td class="text-center">{{ item.pricePerUnit }}</td>
+                                <td class="text-center">{{ item.gstPercentage }}%</td>
+                                <td class="text-right px-2">₹ {{ item.amount | number:'1.0-0' }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="row-highlight">
+                                <td colspan="6" class="text-right px-2"><strong>Sub Total</strong></td>
+                                <td class="text-right px-2 border-left font-bold">₹ <span class="float-right">{{
+                                        quotation.subTotal | number:'1.0-0' }}</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right px-2"><strong>Advance</strong></td>
+                                <td class="text-right px-2 border-left">₹ <span class="float-right">{{ quotation.advance
+                                        ? (quotation.advance | number:'1.0-0') : '-' }}</span></td>
+                            </tr>
+                            <tr class="row-highlight">
+                                <td colspan="6" class="text-right px-2"><strong>Final Amount:</strong></td>
+                                <td class="text-right px-2 border-left font-bold text-lg">₹ <span class="float-right">{{
+                                        quotation.finalAmount | number:'1.0-0' }}</span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="spacer-row">
+                <td colspan="2"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="no-padding border-top">
+                    <table class="w-full footer-table">
+                        <tr>
+                            <td style="width: 60%; vertical-align: top;" class="border-right no-padding">
+                                <div class="header-professional p-1 border-bottom"><strong>Account Details:-</strong>
+                                </div>
+                                <div class="p-2">
+                                    <p><strong>Company Name:</strong> {{ quotation.accountDetails.companyName }}</p>
+                                    <p class="border-top-thin"><strong>A/C:</strong> {{
+                                        quotation.accountDetails.accountNo }}</p>
+                                    <p class="border-top-thin"><strong>IFSC:</strong> {{ quotation.accountDetails.ifsc
+                                        }}</p>
+                                    <p class="border-top-thin"><strong>BRANCH:</strong> {{
+                                        quotation.accountDetails.branch }}</p>
+                                </div>
+                            </td>
+                            <td style="width: 40%; vertical-align: bottom; position: relative;" class="text-center p-2">
+                                <div class="signature-area" style="height: 60px;"></div>
+                                <div class="text-sm">Seal & Signature</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="no-padding border-top">
+                    <div class="header-professional p-1 border-bottom"><strong>Declaration:</strong></div>
+                    <div class="p-2" style="height: 40px;"></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="text-center p-2 footer-note border-top">
+                    Thanks for your business! Please visit us again.
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

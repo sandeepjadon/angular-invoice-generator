@@ -1,0 +1,54 @@
+<div class="dashboard-wrapper min-h-screen flex flex-column justify-content-between p-4">
+  
+  <div class="content-container w-full mx-auto" style="max-width: 1000px;">
+    
+    <header class="text-center mt-5 mb-6">
+      <img src="assets/imgs/logo.jpg" alt="Solar Smart Logo" class="main-logo mb-4">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Solar Smart Trading Co.</h1>
+      <p class="text-xl text-gray-600 m-0">Document Generation Portal</p>
+    </header>
+
+    <main class="grid">
+      
+      <div class="col-12 md:col-6 p-3">
+        <div class="custom-card shadow-3 hover:shadow-6 transition-all transition-duration-300 border-round-2xl overflow-hidden bg-white h-full cursor-pointer flex flex-column" (click)="navigateTo('/invoice')">
+          <div class="card-top-bar bg-blue-600" style="height: 16px;"></div>
+          
+          <div class="p-5 text-center flex-grow-1 flex flex-column justify-content-between">
+            <div>
+              <div class="icon-box text-blue-600 mb-4">
+                <i class="pi pi-receipt" style="font-size: 4.5rem;"></i>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 mb-3">Tax Invoice</h2>
+              <p class="text-gray-600 mb-5 line-height-3">Generate official Tax Invoices for products and services. Include GST details, track sales, and manage billing records efficiently.</p>
+            </div>
+            <div>
+              <button pButton label="Create Invoice" icon="pi pi-arrow-right" iconPos="right" class="p-button-rounded p-button-primary px-5"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6 p-3">
+        <div class="custom-card shadow-3 hover:shadow-6 transition-all transition-duration-300 border-round-2xl overflow-hidden bg-white h-full cursor-pointer flex flex-column" (click)="navigateTo('/quotation')">
+          <div class="card-top-bar bg-green-500" style="height: 16px;"></div>
+          
+          <div class="p-5 text-center flex-grow-1 flex flex-column justify-content-between">
+            <div>
+              <div class="icon-box text-green-500 mb-4">
+                <i class="pi pi-file-edit" style="font-size: 4.5rem;"></i>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 mb-3">Quotation</h2>
+              <p class="text-gray-600 mb-5 line-height-3">Draft professional project proposals and price estimates. Outline deliverables, terms, and track prospective client opportunities.</p>
+            </div>
+            <div>
+              <button pButton label="Create Quotation" icon="pi pi-arrow-right" iconPos="right" class="p-button-rounded p-button-success px-5"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</div>
