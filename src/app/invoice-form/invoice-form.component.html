@@ -185,6 +185,7 @@
                 <th>Disc.%</th>
                 <th>CGST %</th>
                 <th>SGST %</th>
+                <th>IGST %</th>
                 <th>Amount</th>
                 <th style="width: 5rem">Actions</th>
               </tr>
@@ -204,6 +205,9 @@
                     style="width: 70px"></td>
                 <td><input type="number" pInputText [(ngModel)]="item.sgstRate" (input)="calculateAllTotals()"
                     style="width: 70px"></td>
+                <td><input type="number" pInputText [(ngModel)]="item.igstRate" (input)="calculateAllTotals()"
+                    style="width: 70px">
+                </td>
                 <td class="text-right">{{ item.amount | currency:'INR' }}</td>
                 <td><button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-text"
                     (click)="deleteItem(i)"></button></td>
@@ -221,6 +225,10 @@
               <tr>
                 <td colspan="8" class="text-right">Total SGST</td>
                 <td class="text-right font-bold">{{ invoice.sgstAmount | currency:'INR' }}</td>
+              </tr>
+              <tr>
+                <td colspan="8" class="text-right">Total IGST</td>
+                <td class="text-right font-bold">{{ invoice.igstAmount | currency:'INR' }}</td>
               </tr>
               <tr>
                 <td colspan="8" class="text-right font-bold text-lg">Total</td>
@@ -384,6 +392,10 @@
                 <td class="text-right">{{ invoice.sgstAmount | number:'1.2-2' }}</td>
               </tr>
               <tr>
+                <td colspan="7" class="text-right bold">IGST</td>
+                <td class="text-right">{{ invoice.igstAmount | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
                 <td colspan="7" class="text-right bold total-row">Total</td>
                 <td class="text-right bold total-row">{{ invoice.totalAmount | number:'1.2-2' }}</td>
               </tr>
@@ -403,9 +415,12 @@
                 <th rowspan="2">Taxable Value</th>
                 <th colspan="2">CGST</th>
                 <th colspan="2">SGST/UTGST</th>
+                <th colspan="2">IGST</th>
                 <th rowspan="2">Total Tax Amount</th>
               </tr>
               <tr>
+                <th>Rate</th>
+                <th>Amount</th>
                 <th>Rate</th>
                 <th>Amount</th>
                 <th>Rate</th>
@@ -420,6 +435,8 @@
                 <td class="text-right">{{ summary.cgstAmount | number:'1.2-2' }}</td>
                 <td class="text-right">{{ summary.sgstRate }}%</td>
                 <td class="text-right">{{ summary.sgstAmount | number:'1.2-2' }}</td>
+                <td class="text-right">{{ summary.igstRate }}%</td>
+                <td class="text-right">{{ summary.igstAmount | number:'1.2-2' }}</td>
                 <td class="text-right">{{ summary.totalTaxAmount | number:'1.2-2' }}</td>
               </tr>
               <tr class="bold">
@@ -429,7 +446,10 @@
                 <td class="text-right">{{ invoice.cgstAmount | number:'1.2-2' }}</td>
                 <td></td>
                 <td class="text-right">{{ invoice.sgstAmount | number:'1.2-2' }}</td>
-                <td class="text-right">{{ (invoice.cgstAmount || 0) + (invoice.sgstAmount || 0) | number:'1.2-2' }}</td>
+                <td></td>
+                <td class="text-right">{{ invoice.igstAmount | number:'1.2-2' }}</td>
+                <td class="text-right">{{ (invoice.cgstAmount || 0) + (invoice.sgstAmount || 0) + (invoice.igstAmount ||
+                  0) | number:'1.2-2' }}</td>
               </tr>
             </tbody>
           </table>

@@ -32,6 +32,7 @@ export interface InvoiceItem {
   discountPercentage: number;
   cgstRate: number; // <-- ADDED
   sgstRate: number; // <-- ADDED
+  igstRate: number;
   amount?: number;
 }
 
@@ -60,6 +61,7 @@ export interface Invoice {
   subTotal?: number;
   cgstAmount?: number; // This is now a sum of item taxes
   sgstAmount?: number; // This is now a sum of item taxes
+  igstAmount?: number;
   totalAmount?: number;
 }
 
@@ -71,6 +73,8 @@ export interface HsnSummaryItem {
   cgstAmount: number;
   sgstRate: number;
   sgstAmount: number;
+  igstRate: number;
+  igstAmount: number;
   totalTaxAmount: number;
 }
 
@@ -95,7 +99,7 @@ export class InvoiceFormComponent implements OnInit {
     buyersOrderNo: '', buyersOrderDate: new Date(), dispatchedThrough: '', dispatchDocNo: '', deliveryNoteDate: new Date(),
     destination: '', termsOfDelivery: '', billOfLadingLR_RRNo: '', motorVehicleNo: '',
     items: [
-      { description: '', hsn: '', quantity: 1, rate: 0, per: 'Nos', discountPercentage: 0, cgstRate: 6, sgstRate: 6 }
+      { description: '', hsn: '', quantity: 1, rate: 0, per: 'Nos', discountPercentage: 0, cgstRate: 6, sgstRate: 6, igstRate: 0 }
     ],
     panNo: 'FUZPM9480C', totalAmountInWords: ''
   };
@@ -118,7 +122,7 @@ export class InvoiceFormComponent implements OnInit {
   addNewItem(): void {
     this.invoice.items.push({
       description: '', hsn: '', quantity: 1, rate: 0, per: 'Nos',
-      discountPercentage: 0, cgstRate: 6, sgstRate: 6, amount: 0
+      discountPercentage: 0, cgstRate: 6, sgstRate: 6, amount: 0, igstRate: 0
     });
   }
 
@@ -130,6 +134,16 @@ export class InvoiceFormComponent implements OnInit {
   calculateAllTotals(): void {
     let totalCgst = 0;
     let totalSgst = 0;
+    let totalIgst = 0;
+
+    this.invoice.items.forEach(item => {
+      if (item.igstRate > 0) {
+        item.cgstRate = 0;
+        item.sgstRate = 0;
+      } else {
+        item.igstRate = 0;
+      }
+    });
 
     // Calculate amount for each item
     this.invoice.items.forEach(item => {
@@ -144,20 +158,24 @@ export class InvoiceFormComponent implements OnInit {
     this.invoice.items.forEach(item => {
       totalCgst += (item.amount || 0) * (item.cgstRate / 100);
       totalSgst += (item.amount || 0) * (item.sgstRate / 100);
+      totalIgst += (item.amount || 0) * (item.igstRate / 100);
     });
     this.invoice.cgstAmount = totalCgst;
     this.invoice.sgstAmount = totalSgst;
+    this.invoice.igstAmount = totalIgst;
 
-    this.invoice.totalAmount = this.invoice.subTotal + this.invoice.cgstAmount + this.invoice.sgstAmount;
+    this.invoice.totalAmount = this.invoice.subTotal + this.invoice.cgstAmount + this.invoice.sgstAmount + this.invoice.igstAmount;
     this.invoice.totalAmountInWords = this.convertToIndianWords(this.invoice.totalAmount || 0);
 
     // --- Corrected HSN Summary Logic ---
-    const hsnMap: { [key: string]: { taxableValue: number, cgstRate: number, sgstRate: number } } = {};
+    const hsnMap: { [key: string]: { taxableValue: number, cgstRate: number, sgstRate: number, igstRate: number } } = {};
 
     for (const item of this.invoice.items) {
       if (!item.hsn) continue;
       // Group by HSN and Tax Rates
-      const key = `${item.hsn}_${item.cgstRate}_${item.sgstRate}`;
+      const key = item.igstRate > 0
+        ? `${item.hsn}_IGST_${item.igstRate}`
+        : `${item.hsn}_GST_${item.cgstRate}_${item.sgstRate}`;
 
       if (hsnMap[key]) {
         hsnMap[key].taxableValue += item.amount || 0;
@@ -165,24 +183,41 @@ export class InvoiceFormComponent implements OnInit {
         hsnMap[key] = {
           taxableValue: item.amount || 0,
           cgstRate: item.cgstRate,
-          sgstRate: item.sgstRate
+          sgstRate: item.sgstRate,
+          igstRate: item.igstRate
         };
       }
     }
 
     this.hsnSummary = Object.keys(hsnMap).map((key, index) => {
-      const [hsn] = key.split('_');
       const data = hsnMap[key];
-      const cgstAmount = (data.taxableValue * data.cgstRate) / 100;
-      const sgstAmount = (data.taxableValue * data.sgstRate) / 100;
+      const parts = key.split('_');
+
+      let hsn = parts[0];
+      let cgst = 0;
+      let sgst = 0;
+      let igst = 0;
+
+      if (parts[1] === 'IGST') {
+        igst = Number(parts[2]) || 0;
+      } else {
+        cgst = Number(parts[2]) || 0;
+        sgst = Number(parts[3]) || 0;
+      }
+
+      const cgstAmount = (data.taxableValue || 0) * cgst / 100;
+      const sgstAmount = (data.taxableValue || 0) * sgst / 100;
+      const igstAmount = (data.taxableValue || 0) * igst / 100;
       return {
         hsn: hsn,
         taxableValue: data.taxableValue,
-        cgstRate: data.cgstRate,
+        cgstRate: cgst,
         cgstAmount: cgstAmount,
-        sgstRate: data.sgstRate,
+        sgstRate: sgst,
         sgstAmount: sgstAmount,
-        totalTaxAmount: cgstAmount + sgstAmount,
+        igstRate: igst,
+        igstAmount: igstAmount,
+        totalTaxAmount: cgstAmount + sgstAmount + igstAmount,
       };
     });
   }
